@@ -1,24 +1,119 @@
-import React from 'react'
+import React, { useState } from 'react'
+import calStore from '../CalStore'
 
-const Interface = props => {
+const Interface = () => {
+  // const onClickNum = num => {
+  //   if (props.emitNumber) props.emitNumber(num)
+  // }
+  //
+  // const onClickClear = () => {
+  //   if (props.emitClear) props.emitClear()
+  // }
+  //
+  // const onClickOperator = op => {
+  //   if (props.emitOp) props.emitOp(op)
+  // }
+  //
+  // const onClickEqual = () => {
+  //   if (props.emitEqual) props.emitEqual()
+  // }
+  //
+  // const onClickDel = () => {
+  //   if (props.emitDel) props.emitDel()
+  // }
+
+  const [val1, setVal1] = useState(0)
+  const [val2, setVal2] = useState(0)
+  const [operator, setOperator] = useState('')
+
   const onClickNum = num => {
-    if (props.emitNumber) props.emitNumber(num)
+    if (operator) {
+      setVal2(val2 * 10 + num)
+    } else {
+      setVal1(val1 * 10 + num)
+    }
+    calStore.dispatch({
+      type: 'SET_DISPLAY',
+      value: calStore.getState().display + num.toString(),
+    })
   }
 
-  const onClickClear = () => {
-    if (props.emitClear) props.emitClear()
+  const makeResult = () => {
+    let tmp
+    switch (operator) {
+      case '＋':
+        tmp = val1 + val2
+        break
+      case '－':
+        tmp = val1 - val2
+        break
+      case '×':
+        tmp = val1 * val2
+        break
+      case '÷':
+        tmp = val1 / val2
+        break
+      default:
+        tmp = 0
+    }
+    calStore.dispatch({ type: 'SET_RESULT', value: tmp })
+    setOperator('')
+    setVal1(tmp)
+    setVal2(0)
+    return tmp
   }
 
   const onClickOperator = op => {
-    if (props.emitOp) props.emitOp(op)
+    if (operator) {
+      calStore.dispatch({ type: 'SET_DISPLAY', value: makeResult() + op })
+    } else {
+      calStore.dispatch({
+        type: 'SET_DISPLAY',
+        value: calStore.getState().display + op,
+      })
+    }
+    setOperator(op)
+  }
+
+  const onClickClear = () => {
+    calStore.dispatch({ type: 'SET_RESULT', value: 0 })
+    calStore.dispatch({ type: 'SET_DISPLAY', value: '' })
+    setVal1(0)
+    setVal2(0)
+    setOperator('')
   }
 
   const onClickEqual = () => {
-    if (props.emitEqual) props.emitEqual()
+    if (!val1 && !val2) {
+      calStore.dispatch({ type: 'SET_RESULT', value: 0 })
+    } else if (!val2) {
+      calStore.dispatch({ type: 'SET_RESULT', value: val1 })
+    } else {
+      calStore.dispatch({ type: 'SET_DISPLAY', value: makeResult().toString() })
+    }
   }
 
   const onClickDel = () => {
-    if (props.emitDel) props.emitDel()
+    if (val2 > 0) {
+      setVal2(Number(val2.toString().slice(0, -1)))
+      calStore.dispatch({
+        type: 'SET_DISPLAY',
+        value: calStore.getState().display.slice(0, -1),
+      })
+    } else if (operator) {
+      setOperator('')
+      setVal2(0)
+      calStore.dispatch({
+        type: 'SET_DISPLAY',
+        value: calStore.getState().display.slice(0, -1),
+      })
+    } else {
+      setVal1(Number(val1.toString().slice(0, -1)))
+      calStore.dispatch({
+        type: 'SET_DISPLAY',
+        value: calStore.getState().display.slice(0, -1),
+      })
+    }
   }
 
   return (

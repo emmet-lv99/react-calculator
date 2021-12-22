@@ -1,10 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
 import '../Calculator.css'
+import calStore from '../CalStore'
 
-const Result = props => {
+const Result = () => {
+  const [result, setResult] = useState(calStore.getState().result)
+  calStore.subscribe(() => setResult(calStore.getState().result))
+
   return (
     <>
-      <div className="result">{props.result}</div>
+      <div className="result">{result}</div>
     </>
   )
 }
