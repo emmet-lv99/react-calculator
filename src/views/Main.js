@@ -47,6 +47,7 @@ const Main = () => {
         tmp = val1 / val2
         break
     }
+    setOperator('')
     setVal1(tmp)
     setVal2(0)
     setResult(tmp)
@@ -73,6 +74,8 @@ const Main = () => {
   const getEqual = () => {
     if (!val1 && !val2) {
       setResult(0)
+    } else if (!val2) {
+      setResult(val1)
     } else {
       setDisplay(makeResult().toString())
     }
