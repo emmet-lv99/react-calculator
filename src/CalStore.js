@@ -2,10 +2,7 @@ import { createStore } from 'redux'
 
 const initialState = {
   result: 0,
-  val1: 0,
-  val2: 0,
   display: '',
-  operator: '',
 }
 export default createStore(function (state = initialState, action) {
   switch (action.type) {
@@ -17,7 +14,7 @@ export default createStore(function (state = initialState, action) {
     case 'SET_RESULT':
       return {
         ...state,
-        display: action.value,
+        result: action.value,
       }
     default:
       return {

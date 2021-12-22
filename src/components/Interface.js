@@ -2,26 +2,6 @@ import React, { useState } from 'react'
 import calStore from '../CalStore'
 
 const Interface = () => {
-  // const onClickNum = num => {
-  //   if (props.emitNumber) props.emitNumber(num)
-  // }
-  //
-  // const onClickClear = () => {
-  //   if (props.emitClear) props.emitClear()
-  // }
-  //
-  // const onClickOperator = op => {
-  //   if (props.emitOp) props.emitOp(op)
-  // }
-  //
-  // const onClickEqual = () => {
-  //   if (props.emitEqual) props.emitEqual()
-  // }
-  //
-  // const onClickDel = () => {
-  //   if (props.emitDel) props.emitDel()
-  // }
-
   const [val1, setVal1] = useState(0)
   const [val2, setVal2] = useState(0)
   const [operator, setOperator] = useState('')
@@ -86,7 +66,7 @@ const Interface = () => {
   const onClickEqual = () => {
     if (!val1 && !val2) {
       calStore.dispatch({ type: 'SET_RESULT', value: 0 })
-    } else if (!val2) {
+    } else if (val1 && !val2) {
       calStore.dispatch({ type: 'SET_RESULT', value: val1 })
     } else {
       calStore.dispatch({ type: 'SET_DISPLAY', value: makeResult().toString() })
