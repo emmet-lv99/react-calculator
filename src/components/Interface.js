@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
-import calStore from '../CalStore'
 
-const Interface = () => {
+const Interface = ({ display, emitDisplay, emitResult }) => {
   const [val1, setVal1] = useState(0)
   const [val2, setVal2] = useState(0)
   const [operator, setOperator] = useState('')
@@ -12,10 +11,7 @@ const Interface = () => {
     } else {
       setVal1(val1 * 10 + num)
     }
-    calStore.dispatch({
-      type: 'SET_DISPLAY',
-      value: calStore.getState().display + num.toString(),
-    })
+    emitDisplay(display + num.toString())
   }
 
   const makeResult = () => {
@@ -36,7 +32,7 @@ const Interface = () => {
       default:
         tmp = 0
     }
-    calStore.dispatch({ type: 'SET_RESULT', value: tmp })
+    emitResult(tmp)
     setOperator('')
     setVal1(tmp)
     setVal2(0)
@@ -45,19 +41,16 @@ const Interface = () => {
 
   const onClickOperator = op => {
     if (operator) {
-      calStore.dispatch({ type: 'SET_DISPLAY', value: makeResult() + op })
+      emitDisplay(makeResult() + op)
     } else {
-      calStore.dispatch({
-        type: 'SET_DISPLAY',
-        value: calStore.getState().display + op,
-      })
+      emitDisplay(display + op)
     }
     setOperator(op)
   }
 
   const onClickClear = () => {
-    calStore.dispatch({ type: 'SET_RESULT', value: 0 })
-    calStore.dispatch({ type: 'SET_DISPLAY', value: '' })
+    emitResult(0)
+    emitDisplay('')
     setVal1(0)
     setVal2(0)
     setOperator('')
@@ -65,35 +58,24 @@ const Interface = () => {
 
   const onClickEqual = () => {
     if (!val1 && !val2) {
-      calStore.dispatch({ type: 'SET_RESULT', value: 0 })
+      emitResult(0)
     } else if (val1 && !val2) {
-      calStore.dispatch({ type: 'SET_RESULT', value: val1 })
+      emitResult(val1)
     } else {
-      calStore.dispatch({ type: 'SET_DISPLAY', value: makeResult().toString() })
+      emitDisplay(makeResult().toString())
     }
   }
 
   const onClickDel = () => {
     if (val2 > 0) {
       setVal2(Number(val2.toString().slice(0, -1)))
-      calStore.dispatch({
-        type: 'SET_DISPLAY',
-        value: calStore.getState().display.slice(0, -1),
-      })
     } else if (operator) {
       setOperator('')
       setVal2(0)
-      calStore.dispatch({
-        type: 'SET_DISPLAY',
-        value: calStore.getState().display.slice(0, -1),
-      })
     } else {
       setVal1(Number(val1.toString().slice(0, -1)))
-      calStore.dispatch({
-        type: 'SET_DISPLAY',
-        value: calStore.getState().display.slice(0, -1),
-      })
     }
+    emitDisplay(display.slice(0, -1))
   }
 
   return (
