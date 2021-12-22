@@ -5,16 +5,6 @@ import Result from '../components/Result'
 import Interface from '../components/Interface'
 import '../Calculator.css'
 
-/*
- *Todo 변수 세팅
- *Todo 인터페이스 숫자 버튼 기능 구현
- *Todo C 초기화 버튼 기능 구현
- *Todo 오퍼레이터 값 받아오기
- *Todo 더하기 기능을 구현해보자
- *Todo 나머지 연산 기능도 구현해보자
- *Todo 삭제 기능을 구현해보자
- */
-
 const Main = () => {
   const [result, setResult] = useState(0)
   const [val1, setVal1] = useState(0)
